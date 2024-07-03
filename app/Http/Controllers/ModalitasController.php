@@ -90,7 +90,7 @@ class ModalitasController extends Controller
      */
     public function edit(Modalitas $modalitas)
     {
-        // dd($dataModal);
+        // dd($modalitas);
         return view('karyawan.modalitas.edit', compact('modalitas'));
     }
 

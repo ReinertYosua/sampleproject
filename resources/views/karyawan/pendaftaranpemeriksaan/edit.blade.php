@@ -7,7 +7,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Form Edit Data Jenis Pemeriksaan</h1>
+      <h1>Form Edit Daftar Pemeriksaan Pasien</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -61,11 +61,21 @@
                     </div>
                     <div class="col-md-3">
                         <label for="" class="form-label">Tanggal Pendaftaran</label>
-                        <input type="date" id="tanggalDaftar" name="tanggalDaftar" value="{{ old('tanggalDaftar', $getDaftarPemeriksaan[0]->tanggalDaftar) }}" class="form-control @error('tanggalDaftar') is-invalid @enderror" autocomplete="off" disabled>
+                        <input type="date" id="tanggalDaftar" name="tanggalDaftar" value="{{ old('tanggalDaftar', $getDaftarPemeriksaan[0]->tanggalDaftar) }}" class="form-control @error('tanggalDaftar') is-invalid @enderror" autocomplete="off">
                     </div>
                     <div class="col-md-3">
                          <label for="" class="form-label">Cek Jadwal Pemeriksaan</label>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cekSlot">Lihat Slot <i class="bi bi-binoculars"></i></button>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" class="form-label">Pilih Dokter Radiografi</label>
+                        <select id="dokterRadiografi" name="dokterRadiografi" class="form-control @error('dokterRadiografi') is-invalid @enderror">
+                            <option value="" selected>- Pilih -</option>
+                            @foreach($dokterData as $dd)
+                            <option value="{{ $dd->id }}" {{ old('dokterRadiografi')==$dd->id ? 'selected':''  }}>{{ $dd->name." - ".$dd->spesialis }}</option>
+                            @endforeach
+                    
+                        </select>
                     </div>
                     <!-- vertically modal -->
                     <div class="modal fade" id="cekSlot" tabindex="-1">
@@ -139,11 +149,11 @@
                                                 
                                             </td>
                                             <td>
-                                                <input type="time" value="{{ $gdp->jamMulai }}" name="jamMulai[]" id="jamMulai{{ $index }}" class="form-control @error('jamMulai.{{ $index }}') is-invalid @enderror" autocomplete="off" readonly>
+                                                <input type="time" value="{{ $gdp->jamMulai }}" name="jamMulai[]" id="jamMulai{{ $index }}" class="form-control @error('jamMulai.{{ $index }}') is-invalid @enderror" autocomplete="off" >
                                             
                                             </td>
                                             <td>
-                                                <input type="time" value="{{ $gdp->jamSelesai }}" name="jamSelesai[]" id="jamSelesai{{ $index }}" class="form-control @error('jamSelesai.{{ $index }}') is-invalid @enderror" autocomplete="off" readonly>
+                                                <input type="time" value="{{ $gdp->jamSelesai }}" name="jamSelesai[]" id="jamSelesai{{ $index }}" class="form-control @error('jamSelesai.{{ $index }}') is-invalid @enderror" autocomplete="off" >
                                             
                                             </td>
                                             <td>
@@ -173,15 +183,67 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button id="add_row" data-index="{{ $index }}" class="btn btn-primary float-start">+ Add Row</button>
+                                    <button id='delete_row' class="float-end btn btn-danger">- Delete Row</button>
+                                </div>
+                            </div>
+                            <!-- vertically modal -->
+                            <div class="modal fade" id="verticalycentered" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Data Jenis Pemeriksaan</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive">
+                                            <table id="tabel-jenis-pemeriksaan" class="table table-smtable-striped table-bordered mt-1 text-center" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <td>Nama jenis Pemeriksaan</td>
+                                                        <td>Nama Modalitas</td>
+                                                        <td>Kelompok Jenis Pemeriksaan</td>
+                                                        <td>Pemakaian Kontras</td>
+                                                        <td>Harga</td>
+                                                        <td>Lama Pemeriksaan (Menit)</td>
+                                                        <td>Ruangan</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($datajenispemeriksaan as $dp)
+                                                        <tr>
+                                                            <td><a href="#" class="select-data" data-value1="{{ $dp->id }}" data-value2="{{ $dp->id.'-'.$dp->namaJenisPemeriksaan }}" data-value3="{{ $dp->namaModalitas }}" data-value4="{{ $dp->harga }}">{{ $dp->namaJenisPemeriksaan }}</a></td>
+                                                            <td>{{ $dp->namaModalitas }}</td>
+                                                            <td>{{ $dp->kelompokJenisPemeriksaan }}</td>
+                                                            <td>{{ $dp->pemakaianKontras }}</td>
+                                                            <td>{{ $dp->harga }}</td>
+                                                            <td>{{ $dp->lamaPemeriksaan }}</td>
+                                                            <td>{{ $dp->kodeRuang }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button> -->
+                                    </div>
+                                </div>
+                                </div>
+                            </div><!-- End Vertically centered Modal-->
                             
                         </div>
                     </div>
                 
 
                     <div class="text-center mt-3">
+                    @if($statusSave=='tidak')
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="reset" class="btn btn-secondary">Reset</button>
+                    @endif
                     <a href="{{ route('karyawan.pendaftaranpemeriksaan.list') }}" class="btn btn-light">Back</a>
                     </div>
                 </form><!-- End Multi Columns Form -->
@@ -224,10 +286,31 @@
     // memindahkan data data dari modal ke field baris yang dipilih
     $(document).ready(function(){
        
-        var table = $('#tabel-jenis-pemeriksaan').DataTable();
-        var table1 = $('#tabel-slot-pemeriksaan').DataTable();
-        
-    });
+       var table = $('#tabel-jenis-pemeriksaan').DataTable();
+       var table1 = $('#tabel-slot-pemeriksaan').DataTable();
+       $('.select-data').click(function(event) {
+           event.preventDefault(); // Mencegah aksi default dari link
+
+           var nextRowIndex =baris;
+
+           var dataValue1 = $(this).data('value1'); // Ambil nilai id jenis pemeriksaan
+           $('#idJenisPemeriksaan'+ nextRowIndex).val(dataValue1); // Masukkan nilai ke dalam input text
+
+           var dataValue2 = $(this).data('value2'); // Ambil nilai nama jenis pemeriksaan
+           $('#namaJenisPemeriksaan'+ nextRowIndex).val(dataValue2); // Masukkan nilai ke dalam input text
+
+           var dataValue3 = $(this).data('value3'); // Ambil nilai nama modalitas
+           $('#namaModalitas'+ nextRowIndex).val(dataValue3); // Masukkan nilai ke dalam input text
+           
+           var dataValue4 = $(this).data('value4'); // Ambil nilai harga
+           $('#harga'+ nextRowIndex).val(dataValue4); // Masukkan nilai ke dalam input text
+
+           
+           $('#verticalycentered').modal('hide'); // Tutup modal
+
+           
+       });
+   });
 </script>
 <!-- <script type="text/javascript">
     new Cleave('#harga', {
@@ -299,6 +382,7 @@ document.getElementById('formPemeriksaan').addEventListener('submit', function(e
     const namaDokterPengirim = document.getElementById('namaDokterPengirim');
     // const fileLampiran = document.getElementById('fileLampiran');
     const tanggalDaftar = document.getElementById('tanggalDaftar');
+    const dokterRadiografi = document.getElementById('dokterRadiografi');
 
     // Validasi namaDokterPengirim
     if (!namaDokterPengirim.value.trim()) {
@@ -307,6 +391,15 @@ document.getElementById('formPemeriksaan').addEventListener('submit', function(e
         namaDokterPengirim.classList.add('is-invalid');
     } else {
         namaDokterPengirim.classList.remove('is-invalid');
+    }
+
+    // Validasi namaDokterRadiografi
+    if (!dokterRadiografi.value.trim()) {
+        isValid = false;
+        errorMessages.push('Nama Dokter Radiografi harus diisi.');
+        dokterRadiografi.classList.add('is-invalid');
+    } else {
+        dokterRadiografi.classList.remove('is-invalid');
     }
     // Validasi fileLampiran
     // if (!fileLampiran.value) {

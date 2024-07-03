@@ -11,4 +11,5 @@ class Pasien extends Model
 
     protected $table = 'pasien';
     protected $guarded=[];
+
 }

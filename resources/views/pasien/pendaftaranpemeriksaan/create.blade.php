@@ -141,7 +141,7 @@
                                            
                                         </td>
                                         <td>
-                                            <input type="text" name="harga[]" id="harga0" class="price form-control @error('harga.0') is-invalid @enderror">
+                                            <input type="text" name="harga[]" id="harga0" class="price form-control @error('harga.0') is-invalid @enderror" readonly>
                                             
                                         </td>
                                         

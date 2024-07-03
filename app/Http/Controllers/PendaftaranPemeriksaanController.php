@@ -7,6 +7,7 @@ use App\Models\Modalitas;
 use App\Models\Pasien;
 use App\Models\PendaftaranPemeriksaan;
 use App\Models\DetailPendaftaranPemeriksaan;
+use App\Models\TransaksiPemeriksaan;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -21,13 +22,37 @@ class PendaftaranPemeriksaanController extends Controller
     public function index()
     {
         //
-        $idPasien = Pasien::select('pasien.id')
-                ->join('users', 'users.id', '=', 'pasien.idUser')
-                ->where('pasien.idUser', Auth::user()->id)
-                ->get();
+        // $idPasien = Pasien::select('pasien.id')
+        //         ->join('users', 'users.id', '=', 'pasien.idUser')
+        //         ->where('pasien.idUser', Auth::user()->id)
+        //         ->get();
 
-        $datadaftarperiksa = PendaftaranPemeriksaan::where('idPasien',$idPasien[0]->id)
-                            ->orderBy('tanggalDaftar', 'desc')->get();
+        // $datadaftarperiksa = PendaftaranPemeriksaan::where('idPasien',$idPasien[0]->id)
+        //                     ->orderBy('tanggalDaftar', 'desc')->get();
+
+        $subquery = TransaksiPemeriksaan::select('idDaftarPemeriksaan');
+        $detailSubquery = DetailPendaftaranPemeriksaan::select('idDaftarPemeriksaan')
+            ->selectRaw('COUNT(*) AS totalStatusTidak')
+            ->where('statusKetersediaan', 'Tidak')
+            ->groupBy('idDaftarPemeriksaan');
+        $datadaftarperiksa = PendaftaranPemeriksaan::join('pasien', 'pasien.id', '=', 'pendaftaran_pemeriksaan.idPasien')
+            ->join('users', 'users.id', '=', 'pasien.idUser')
+            ->leftJoinSub($detailSubquery, 'dp', function ($join) {
+                $join->on('pendaftaran_pemeriksaan.id', '=', 'dp.idDaftarPemeriksaan');
+            })
+            ->select(
+                'pendaftaran_pemeriksaan.id',
+                'pendaftaran_pemeriksaan.no_pendaftaran',
+                'users.name',
+                'pendaftaran_pemeriksaan.namaDokterPengirim',
+                'pendaftaran_pemeriksaan.tanggalDaftar',
+                'pendaftaran_pemeriksaan.fileLampiran',
+                \DB::raw('COALESCE(dp.totalStatusTidak, 0) AS totalStatusTidak')
+            )
+            ->whereNotIn('pendaftaran_pemeriksaan.id', $subquery)
+            ->where('users.id', Auth::user()->id)
+            ->orderBy('pendaftaran_pemeriksaan.tanggalDaftar', 'desc')
+            ->get();
         return view('pasien.pendaftaranpemeriksaan.index', compact('datadaftarperiksa'));
     }
 
@@ -105,14 +130,28 @@ class PendaftaranPemeriksaanController extends Controller
     {
        
         //
+
+        $dataPasien = Pasien::select('pasien.id','users.name as namaPasien')
+                ->join('users', 'users.id', '=', 'pasien.idUser')
+                ->where('pasien.idUser', Auth::user()->id)
+                ->get();
+
+        $datadaftarperiksa = PendaftaranPemeriksaan::where('id',$id)->get();
+        $dataNama = $dataPasien[0]->namaPasien;
+        $tanggaldaftar = $datadaftarperiksa[0]->tanggalDaftar;
+        $noregistrasi = $datadaftarperiksa[0]->no_pendaftaran;
+        $namadokterrekomendasi = $datadaftarperiksa[0]->namaDokterPengirim;
+        
         $getDetailPendaftaran =  DetailPendaftaranPemeriksaan::join('pendaftaran_pemeriksaan', 'pendaftaran_pemeriksaan.id', '=', 'detail_pendaftaran_pemeriksaan.idDaftarPemeriksaan')
                         ->join('jenis_pemeriksaan', 'jenis_pemeriksaan.id', '=', 'detail_pendaftaran_pemeriksaan.idJenisPemeriksaan')
                         ->join('modalitas', 'modalitas.id', '=', 'jenis_pemeriksaan.idModalitas')
                         ->select('jenis_pemeriksaan.namaJenisPemeriksaan', 'modalitas.namaModalitas', 'jenis_pemeriksaan.kelompokJenisPemeriksaan', 'detail_pendaftaran_pemeriksaan.jamMulai', 'detail_pendaftaran_pemeriksaan.jamSelesai', 'detail_pendaftaran_pemeriksaan.statusKetersediaan', 'detail_pendaftaran_pemeriksaan.keterangan', 'jenis_pemeriksaan.harga')
                         ->where('pendaftaran_pemeriksaan.id', '=', $id)
+                        ->orderby('detail_pendaftaran_pemeriksaan.jamMulai','asc')
                         ->get();
         
         $html = "";
+        $totaltidak=0;
         foreach($getDetailPendaftaran as $get){
             $html .= "
                 <tr>
@@ -128,6 +167,7 @@ class PendaftaranPemeriksaanController extends Controller
                     if ($get->statusKetersediaan == 'ya') {
                         $html .= "<span class='btn btn-success'>Sedang Digunakan</span>";
                     } else {
+                        $totaltidak++;
                         $html .= "<span class='btn btn-danger'>Dalam Reservasi</span>";
                     }
 
@@ -136,9 +176,22 @@ class PendaftaranPemeriksaanController extends Controller
                         </tr>
                     ";
         }
-        $response['html'] = $html;
+
+
+        // $response['html'] = $html;
   
-            return response()->json($response);
+        // return response()->json($response);
+
+
+
+            return response()->json([
+                'html' => $html,
+                'dataNama' => $dataNama,
+                'tanggaldaftar' => $tanggaldaftar,
+                'noregistrasi' => $noregistrasi,
+                'namadokterrekomendasi' => $namadokterrekomendasi,
+                'totaltidak' => $totaltidak,
+            ]);
     }
 
     /**
@@ -247,7 +300,7 @@ class PendaftaranPemeriksaanController extends Controller
         //
         PendaftaranPemeriksaan::where('id', $id)->delete();
         DetailPendaftaranPemeriksaan::where('idDaftarPemeriksaan', $id)->delete();
-        return redirect()->route('pendaftaranpemeriksaan.list')->with('success','Update Pendaftaran Pemeriksaan berhasil.');
+        return redirect()->route('pendaftaranpemeriksaan.list')->with('success','Delete Pendaftaran Pemeriksaan berhasil.');
     }
 
     public function download($file){

@@ -9,8 +9,11 @@ use App\Http\Controllers\DokterController;
 use App\Http\Controllers\ModalitasController;
 use App\Http\Controllers\DicomController;
 use App\Http\Controllers\JenisPemeriksaanController;
+use App\Http\Controllers\TransaksiPemeriksaanController;
 use App\Http\Controllers\PendaftaranPemeriksaanController;
 use App\Http\Controllers\PendaftaranPemeriksaanKaryawanController;
+use App\Http\Controllers\DraftLaporanPemeriksaanController;
+use App\Http\Controllers\HasilPemeriksaanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +27,30 @@ Route::middleware(['auth', 'dokter'])->group(function () {
     //     return view('dokter.dashboard');
     // })->name('dokter.dashboard');
 });
+Route::middleware(['auth', 'dokter'])->group(function () {
+    Route::get('/dokter/transaksipemeriksaan/list', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'index'])->name('dokter.transaksipemeriksaan.index');
+    Route::get('/dokter/transaksipemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'show'])->name('dokter.transaksipemeriksaan.show');
+    Route::get('/dokter/transaksipemeriksaan/{id}/edit', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'edit'])->name('dokter.transaksipemeriksaan.edit');
+    Route::put('/dokter/transaksipemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'update'])->name('dokter.transaksipemeriksaan.update');
+
+    Route::get('/dokter/hasilpemeriksaan/list', [\App\Http\Controllers\HasilPemeriksaanController::class, 'index'])->name('dokter.hasilpemeriksaan.index');
+    Route::get('/dokter/hasilpemeriksaan/{id}', [\App\Http\Controllers\HasilPemeriksaanController::class, 'show'])->name('dokter.hasilpemeriksaan.show');
+    Route::get('/dokter/hasilpemeriksaan/{id}/edit', [\App\Http\Controllers\HasilPemeriksaanController::class, 'edit'])->name('dokter.hasilpemeriksaan.edit');
+    Route::put('/dokter/hasilpemeriksaan/{id}', [\App\Http\Controllers\HasilPemeriksaanController::class, 'update'])->name('dokter.hasilpemeriksaan.update');
+
+    Route::get('/dokter/pendaftaranpemeriksaan/list', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'index'])->name('dokter.pendaftaranpemeriksaan.list');
+    Route::get('/dokter/pendaftaranpemeriksaan/{id}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'show'])->name('dokter.pendaftaranpemeriksaan.show');
+    
+    Route::get('/dokter/draftlaporanpemeriksaan/list', [\App\Http\Controllers\DraftLaporanPemeriksaanController::class, 'index'])->name('dokter.draftlaporanpemeriksaan.list');
+    Route::get('/dokter/draftlaporanpemeriksaan/{id}', [\App\Http\Controllers\DraftLaporanPemeriksaanController::class, 'show'])->name('dokter.draftlaporanpemeriksaan.show');
+    Route::get('/dokter/transaksipemeriksaan/download/{file}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'download'])->name('dokter.file.download');
+
+    // Route::get('/dokter/hasilpemeriksaan/list', [\App\Http\Controllers\HasilPemeriksaanController::class, 'index'])->name('dokter.hasilpemeriksaan.index');
+    // Route::get('/dokter/hasilpemeriksaan/{id}/edit', [\App\Http\Controllers\HasilPemeriksaanController::class, 'edit'])->name('dokter.hasilpemeriksaan.edit');
+    // Route::get('/dokter/hasilpemeriksaan/{id}', [\App\Http\Controllers\HasilPemeriksaanController::class, 'show'])->name('dokter.hasilpemeriksaan.show');
+    // Route::put('/dokter/hasilpemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'update'])->name('dokter.hasilpemeriksaan.update');
+});
+
 
 Route::middleware(['auth', 'karyawan'])->group(function () {
     Route::get('/karyawan/dashboard', [KaryawanController::class, 'index'])->name('karyawan.dashboard');
@@ -46,6 +73,17 @@ Route::middleware(['auth', 'karyawan'])->group(function () {
     Route::get('/karyawan/pendaftaranpemeriksaan/download/{file}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'download'])->name('karyawan.file.download');
     Route::get('/karyawan/pendaftaranpemeriksaan/{id}/edit', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'edit'])->name('karyawan.pendaftaranpemeriksaan.edit');
     Route::put('/karyawan/pendaftaranpemeriksaan/{id}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'update'])->name('karyawan.pendaftaranpemeriksaan.update');
+
+    Route::get('/karyawan/transaksipemeriksaan/list', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'index'])->name('karyawan.transaksipemeriksaan.index');
+    Route::get('/karyawan/transaksipemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'show'])->name('karyawan.transaksipemeriksaan.show');
+    Route::get('/karyawan/transaksipemeriksaan/{id}/edit', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'edit'])->name('karyawan.transaksipemeriksaan.edit');
+    Route::put('/karyawan/transaksipemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'update'])->name('karyawan.transaksipemeriksaan.update');
+
+    // Route::get('/karyawan/draftlaporanpemeriksaan/list', [\App\Http\Controllers\DraftLaporanPemeriksaanController::class, 'index'])->name('draftlaporanpemeriksaan.list');
+    Route::resource('karyawan/draftlaporanpemeriksaan', DraftLaporanPemeriksaanController::class);
+
+    Route::get('/karyawan/hasilpemeriksaan/list', [\App\Http\Controllers\HasilPemeriksaanController::class, 'index'])->name('karyawan.hasilpemeriksaan.index');
+    Route::get('/karyawan/hasilpemeriksaan/{id}', [\App\Http\Controllers\HasilPemeriksaanController::class, 'show'])->name('karyawan.hasilpemeriksaan.show');
 });
 
 Route::middleware(['auth', 'pasien'])->group(function () {
@@ -56,6 +94,13 @@ Route::middleware(['auth', 'pasien'])->group(function () {
     Route::get('/pasien/pendaftaranpemeriksaan/download/{file}', [\App\Http\Controllers\PendaftaranPemeriksaanController::class, 'download'])->name('file.download');
     Route::resource('pasien/pendaftaranpemeriksaan', PendaftaranPemeriksaanController::class);
 
+    Route::get('/pasien/transaksipemeriksaan/list', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'index'])->name('pasien.transaksipemeriksaan.index');
+    Route::get('/pasien/transaksipemeriksaan/{id}', [\App\Http\Controllers\TransaksiPemeriksaanController::class, 'show'])->name('pasien.transaksipemeriksaan.show');
+    
+    Route::get('/pasien/hasilpemeriksaan/list', [\App\Http\Controllers\HasilPemeriksaanController::class, 'index'])->name('pasien.hasilpemeriksaan.index');
+    Route::get('/pasien/hasilpemeriksaan/{id}', [\App\Http\Controllers\HasilPemeriksaanController::class, 'show'])->name('pasien.hasilpemeriksaan.show');
+    Route::get('/pasien/hasilpemeriksaan/{id}/preview', [\App\Http\Controllers\HasilPemeriksaanController::class, 'preview'])->name('pasien.hasilpemeriksaan.preview');
+    
     // Route::get('/pasien/detailbiodata', function(){
     //     return view('pasien.detailbiodata');
     // })->name('detailbiodata');

@@ -36,6 +36,39 @@
       <span>Pendaftaran Pemeriksaan</span>
     </a>
   </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedPasienTransaksiPeriksa') ? View::yieldContent('setCollapsedPasienTransaksiPeriksa') : 'collapsed' }}" href="{{ route('pasien.transaksipemeriksaan.index') }}">
+      <i class="bx bx-task"></i>
+      <span>Transaksi Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedPasienHasilPeriksa') ? View::yieldContent('setCollapsedPasienHasilPeriksa') : 'collapsed' }}" href="{{ route('pasien.hasilpemeriksaan.index') }}">
+      <i class="bi bi-book"></i>
+      <span>Hasil Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+@endif
+@if(Auth::user()->role == 'dokter' & session()->has('status'))
+
+<li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedDokterTransaksiPeriksa') ? View::yieldContent('setCollapsedDokterTransaksiPeriksa') : 'collapsed' }}" href="{{ route('dokter.transaksipemeriksaan.index') }}">
+    <i class="bx bx-task"></i>
+      <span>Transaksi Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedDokterHasilPeriksa') ? View::yieldContent('setCollapsedDokterHasilPeriksa') : 'collapsed' }}" href="{{ route('dokter.hasilpemeriksaan.index') }}">
+      <i class="bi bi-book"></i>
+      <span>Hasil Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedDokterDraftLaporan') ? View::yieldContent('setCollapsedDokterDraftLaporan') : 'collapsed' }}" href="{{ route('dokter.draftlaporanpemeriksaan.list') }}">
+      <i class="bi bi-person"></i>
+      <span>Draft Laporan Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
 @endif
 @if(Auth::user()->role == 'karyawan' & session()->has('status'))
 <li class="nav-heading">Workflow</li>
@@ -44,6 +77,18 @@
     <a class="nav-link {{ View::hasSection('setCollapsedKaryawanDaftarPeriksa') ? View::yieldContent('setCollapsedKaryawanDaftarPeriksa') : 'collapsed' }}" href="{{ route('karyawan.pendaftaranpemeriksaan.list') }}">
       <i class="bi bi-person"></i>
       <span>Pendaftaran Pasien</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedKaryawanTransaksiPeriksa') ? View::yieldContent('setCollapsedKaryawanTransaksiPeriksa') : 'collapsed' }}" href="{{ route('karyawan.transaksipemeriksaan.index') }}">
+      <i class="bx bx-task"></i>
+      <span>Transaksi Pemeriksaan</span>
+    </a>
+  </li><!-- End Profile Page Nav -->
+  <li class="nav-item">
+    <a class="nav-link {{ View::hasSection('setCollapsedKaryawanHasilPeriksa') ? View::yieldContent('setCollapsedKaryawanHasilPeriksa') : 'collapsed' }}" href="{{ route('karyawan.hasilpemeriksaan.index') }}">
+      <i class="bi bi-book"></i>
+      <span>Hasil Pemeriksaan</span>
     </a>
   </li><!-- End Profile Page Nav -->
 
@@ -65,6 +110,11 @@
       <li>
         <a href="{{ route('jenispemeriksaan.list') }}" class="@yield('setActiveJenisPemeriksaan')">
           <i class="bi bi-circle"></i><span>Jenis Pemeriksaan</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('draftlaporanpemeriksaan.index') }}" class="@yield('setActiveDraftLaporan')">
+          <i class="bi bi-circle"></i><span>Draft Laporan Pemeriksaan</span>
         </a>
       </li>
       

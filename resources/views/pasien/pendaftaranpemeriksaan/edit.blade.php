@@ -145,7 +145,7 @@
                                             
                                             </td>
                                             <td>
-                                                <input type="text" value="{{ $gdp->harga }}" name="harga[]" id="harga{{ $index }}" class="price form-control @error('harga.{{ $index }}') is-invalid @enderror">
+                                                <input type="text" value="{{ $gdp->harga }}" name="harga[]" id="harga{{ $index }}" class="price form-control @error('harga.{{ $index }}') is-invalid @enderror" readonly>
                                                 
                                             </td>
                                             
