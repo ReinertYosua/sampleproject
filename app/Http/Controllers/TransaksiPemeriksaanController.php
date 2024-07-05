@@ -483,7 +483,7 @@ class TransaksiPemeriksaanController extends Controller
                 // delete detail pendaftaran yang lama
                 if($totalRuangTunggu==count($namaJenisPemeriksaan1)){
                     
-                    //$this->sendDataAPI($request,$id);
+                    $this->sendDataAPI($request,$id);
                 }
                 
                 DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan', $id)->delete();
@@ -605,13 +605,14 @@ class TransaksiPemeriksaanController extends Controller
         }
         
          // URL endpoint DICOM server (dummy untuk testing)
-         $urlDicomServer = 'http://10.20.187.102:8080'; // Ganti dengan URL endpoint DICOM yang sebenarnya
+         $urlDicomServer = 'http://10.20.189.213:8080'; // Ganti dengan URL endpoint DICOM yang sebenarnya
 
          // Kirim data ke server DICOM
          $response = Http::timeout(60)->post($urlDicomServer, $data);
  
          if ($response->successful()) {
              // Mengembalikan respons sukses ke frontend atau sistem pemanggil
+             Log::info('Send registration patient to DICOM', $data);
              return response()->json([
                  'status' => 'success',
                  'message' => 'Patient registered successfully',
