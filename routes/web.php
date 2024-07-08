@@ -71,6 +71,7 @@ Route::middleware(['auth', 'karyawan'])->group(function () {
     Route::get('/karyawan/pendaftaranpemeriksaan/list', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'index'])->name('karyawan.pendaftaranpemeriksaan.list');
     Route::get('/karyawan/pendaftaranpemeriksaan/{id}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'show'])->name('karyawan.pendaftaranpemeriksaan.show');
     Route::get('/karyawan/pendaftaranpemeriksaan/download/{file}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'download'])->name('karyawan.file.download');
+    // Route::get('/karyawan/pendaftaranpemeriksaan/create', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'create'])->name('karyawan.pendaftaranpemeriksaan.create');
     Route::get('/karyawan/pendaftaranpemeriksaan/{id}/edit', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'edit'])->name('karyawan.pendaftaranpemeriksaan.edit');
     Route::put('/karyawan/pendaftaranpemeriksaan/{id}', [\App\Http\Controllers\PendaftaranPemeriksaanKaryawanController::class, 'update'])->name('karyawan.pendaftaranpemeriksaan.update');
 

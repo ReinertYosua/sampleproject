@@ -48,7 +48,7 @@
                   <select id="" name="jenisModalitas" class="form-control @error('jenisModalitas') is-invalid @enderror">
                     <option value="" selected>- Pilih -</option>
                     <option value="ctscan" {{ old('jenisModalitas') ?? $modalitas->jenisModalitas =='ctscan' ? 'selected':''  }}>CT Scan</option>
-                    <option value="radiografi" {{ old('jenisModalitas')  ?? $modalitas->jenisModalitas =='radiografi' ? 'selected':''  }}>Radiogradi</option>
+                    <option value="radiografi" {{ old('jenisModalitas')  ?? $modalitas->jenisModalitas =='radiografi' ? 'selected':''  }}>Radiografi</option>
                     <option value="fluoroskopi" {{ old('jenisModalitas')  ?? $modalitas->jenisModalitas =='fluoroskopi' ? 'selected':''  }}>Fluoroskopi</option>
                     <option value="angiografi" {{ old('jenisModalitas')  ?? $modalitas->jenisModalitas =='angiografi' ? 'selected':''  }}>Angiografi</option>
                     <option value="mamografi" {{ old('jenisModalitas')  ?? $modalitas->jenisModalitas =='mamografi' ? 'selected':''  }}>Mamografi</option>

@@ -99,6 +99,7 @@
                             <table id="tabel_daftar_pemeriksaan" class="table table-bordered mt-1 text-center" width="100%">
                                 <thead>
                                     <tr>
+                                        <td>UID</td>
                                         <td>Jenis Pemeriksaan</td>
                                         <td>Jam Mulai</td>
                                         <td>Jam Selesai</td>
@@ -114,6 +115,10 @@
                                     @php $index = 0 @endphp
                                     @foreach($datadetailtransaksipemeriksaan as $gdp)
                                         <tr id="daftar{{ $index }}" data-row="{{ $index }}">
+                                            <td>
+                                                <input @if(Auth::user()->role !='karyawan') disabled @endif type="text" value="{{ $gdp->uuid }}" name="uuid[]" id="uuid{{ $index }}" class="form-control @error('uuid.{{ $index }}') is-invalid @enderror" autocomplete="off" >
+                                            
+                                            </td>
                                             <td>
                                                 <!-- <input type="hidden" name="idJenisPemeriksaan[]" id="idJenisPemeriksaan0"> -->
                                                 <input @if(Auth::user()->role !='karyawan') disabled @endif type="text" value="{{ $gdp->idJenisPemeriksaan.'-'.$gdp->namaJenisPemeriksaan }}" name="namaJenisPemeriksaan[]" data-value1="{{ $gdp->id }}" id="namaJenisPemeriksaan{{ $index }}" class="form-control jenisPemeriksaan @error('namaJenisPemeriksaan.0') is-invalid @enderror" data-bs-toggle="modal" data-bs-target="#verticalycentered" placeholder="Silahkan Pilih Jenis Pemeriksaan" autocomplete="off" readonly>

@@ -149,8 +149,12 @@ class JenisPemeriksaanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JenisPemeriksaan $jenisPemeriksaan)
+    public function destroy(JenisPemeriksaan $jenispemeriksaan)
     {
         //
+        $jenispemeriksaan->delete();
+        return redirect()
+            ->route('jenispemeriksaan.index')
+            ->with('success', 'Jenis Pemeriksaan berhasil dihapus');
     }
 }

@@ -68,6 +68,21 @@ class PendaftaranPemeriksaanKaryawanController extends Controller
         
     }
 
+    public function create(){
+        $datajenispemeriksaan = JenisPemeriksaan::join('modalitas', 'modalitas.id','=','jenis_pemeriksaan.idModalitas')
+                                ->select(['modalitas.namaModalitas as namaModalitas', 'modalitas.kodeRuang as kodeRuang', 'jenis_pemeriksaan.*'])
+                                ->paginate(10);
+        //dd($datajenispemeriksaan);
+        $no = 'REG-' . date('Ymd') . '-' . Str::upper(Str::random(6));
+        // dd($no);
+        $slot = PendaftaranPemeriksaan::select('pendaftaran_pemeriksaan.tanggalDaftar', 'detail_pendaftaran_pemeriksaan.idJenisPemeriksaan', 'jenis_pemeriksaan.namaJenisPemeriksaan', 'detail_pendaftaran_pemeriksaan.jamMulai', 'detail_pendaftaran_pemeriksaan.jamSelesai')
+                ->join('detail_pendaftaran_pemeriksaan', 'detail_pendaftaran_pemeriksaan.idDaftarPemeriksaan', '=', 'pendaftaran_pemeriksaan.id')
+                ->join('jenis_pemeriksaan', 'jenis_pemeriksaan.id', '=', 'detail_pendaftaran_pemeriksaan.idJenisPemeriksaan')
+                ->get();
+
+        return view('karyawan.pendaftaranpemeriksaan.create', compact('datajenispemeriksaan','no','slot'));
+    }
+
     public function show($id){
 
         $datadaftarperiksa = PendaftaranPemeriksaan::join('pasien', 'pasien.id', '=', 'pendaftaran_pemeriksaan.idPasien')
@@ -277,6 +292,7 @@ class PendaftaranPemeriksaanKaryawanController extends Controller
                 ]);
 
                 $detailTransaksi=DetailTransaksiPemeriksaan::create([
+                    'uuid' => Str::uuid(),
                     'idTransaksiPemeriksaan' => $idtransaksiperiksa[0]->id,
                     'idJenisPemeriksaan' => Str::before($namaJenisPemeriksaan[$dp], '-'),//mengambil nilai paling depan dari 2-RRZZZ
                     'jamMulaiAlat' => $jamMulai[$dp],

@@ -59,6 +59,21 @@ class APIDICOMController extends Controller
         Log::info('PerformedProcedureStepStartDate: ' . $PerformedProcedureStepEndDate);
         Log::info('PerformedProcedureStepEndTime: ' . $PerformedProcedureStepEndTime);
 
+        $statusPemeriksaan='';
+        if($PerformedProcedureStepStatus=="IN PROGRESS"){
+            $statusPemeriksaan='3';
+        }else if($PerformedProcedureStepStatus=="COMPLETED"){
+            $statusPemeriksaan='4';
+        }
+
+        $user = DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan','=', $StudyID)
+        ->where('idJenisPemeriksaan','=', $PerformedProcedureStepID)
+        ->update([
+            'performedInstanceUID' => $SOPInstanceUID,
+            'status' => $statusPemeriksaan,
+            // 'last_login_at' => Carbon::now(),
+        ]);
+
 
 
         //new
@@ -153,5 +168,14 @@ class APIDICOMController extends Controller
             'message' => 'Status received successfully',
             'data' => $request->all()
         ]);
+    }
+
+    public function submitHasilPemeriksaan(){
+        // $hasilPemeriksaan=HasilPemeriksaan::create([
+        //     'idTransaksiPemeriksaan' => $id,
+        //     'no_transaksi_pemeriksaan' => $request->no_transaksi_pemeriksaan,
+        //     'idKaryawan' => $getTransPeriksa[0]->idKaryawan,
+        //     'idDokter' => $getTransPeriksa[0]->idDokter,
+        // ]);
     }
 }

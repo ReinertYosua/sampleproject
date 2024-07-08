@@ -116,6 +116,10 @@
                                                 </div>
                                             @elseif($indeksTerkecil==3)
                                                     <span class="badge bg-secondary"><i class="bi bi-hourglass-split"></i> Waiting Report</span>    
+                                                    <div class="btn-group mt-2" role="group" aria-label="Aksi">
+                                                        <a href="{{ route('karyawan.transaksipemeriksaan.edit', $dtp->id)  }}" class="btn btn-sm btn-primary me-2"><i class="bx bx-pencil"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-success me-2 detailBtn" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="{{ $dtp->id }}"><i class="bi bi-eye"></i></a>
+                                                    </div>
                                             @elseif($indeksTerkecil==4)
                                                     <span class="badge bg-info"><i class="bi bi-envelope"></i> Report Ready</span>
                                             @elseif($indeksTerkecil==5)
