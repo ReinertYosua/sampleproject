@@ -29,8 +29,8 @@ class DokterController extends Controller
             'kota' => 'required|string|min:3|max:255',
             'noHp' => 'required|numeric',
             'noTlpRumah'=> 'required|numeric',
-            'fotoprofil' => 'required|image',
-            'fotoprofil.*' => 'mimes:jpg,jpeg,png|max:2048',
+            //'fotoprofil' => 'required|image',
+            //'fotoprofil.*' => 'mimes:jpg,jpeg,png|max:2048',
 
 		];
         $id=
@@ -54,8 +54,13 @@ class DokterController extends Controller
             // dd($request);
             //upload image
             $imageProfil = $request->file('fotoprofil');
-            $imageNameProfil = time().".".$imageProfil->getClientOriginalExtension();
-            $pathFotoProfil = Storage::disk('public')->putFileAs('fotoprofil/dokter', $imageProfil,$imageNameProfil);
+            if($imageProfil!=""){
+                $imageNameProfil = time().".".$imageProfil->getClientOriginalExtension();
+                $pathFotoProfil = Storage::disk('public')->putFileAs('fotoprofil/dokter', $imageProfil,$imageNameProfil);
+            }else{
+                $imageNameProfil="no pict";
+            }
+            
 
             $user=DokterModel::create([
                 'idUser' => Auth::user()->id,

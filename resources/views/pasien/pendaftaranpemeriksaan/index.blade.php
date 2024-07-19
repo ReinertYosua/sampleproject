@@ -38,6 +38,7 @@
                     <table id="tabel-daftar-pemeriksaan" class="table table-striped table-bordered mt-1 text-center" width="100%">
                         <thead>
                             <tr>
+                                <td>No Antrian</td>
                                 <td>No Registrasi Pendaftaran</td>
                                 <td>Nama Dokter Rekomendasi</td>
                                 <td>Tanggal Daftar</td>
@@ -48,6 +49,7 @@
                         <tbody>
                             @foreach($datadaftarperiksa as $dp)
                                 <tr>
+                                    <td>{{ $dp->id }}</td>
                                     <td>{{ $dp->no_pendaftaran }}</td>
                                     <td>{{ $dp->namaDokterPengirim }}</td>
                                     <td>{{ $dp->tanggalDaftar }}</td>

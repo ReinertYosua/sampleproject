@@ -50,6 +50,7 @@
                                 <td>No Transaksi Pemeriksaan</td>
                                 <td>Tanggal Pemeriksaan</td>
                                 <td>Nama Dokter Rekomendasi</td>
+                                <td>Nama Dokter Radiology</td>
                                 <td>Nama Pasien</td>
                                 <td>Status</td>
                                 <td>Action</td>
@@ -89,6 +90,7 @@
                                     <td>{{ $hp->no_transaksi_pemeriksaan }}</td>
                                     <td>{{ $hp->tanggalPemeriksaan }}</td>
                                     <td>{{ $hp->namaDokterRekomendasi }}</td>
+                                    <td>Dr. {{ $hp->namaDokterRadiology }}</td>
                                     <td>{{ $hp->namaPasien }}</td>
                                     <td>
                                         @if($hp->TotalLaporanBelumAda >0)
@@ -264,7 +266,7 @@
     // });
 
     new DataTable('#tabel-draftlaporan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc']]
         });
 
     $('.detailBtn').click(function(e) {
@@ -302,7 +304,7 @@
     //     $('#tabel-draftlaporan').DataTable();
     // });
     new DataTable('#tabel-draftlaporan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc']]
         });
 
     $('.detailBtn').click(function(e) {
@@ -338,7 +340,7 @@
 <script type="text/javascript">
    
     new DataTable('#tabel-draftlaporan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc']]
         });
 
     $('.detailBtn').click(function(e) {

@@ -254,8 +254,19 @@
     
     // memindahkan data data dari modal ke field baris yang dipilih
     $(document).ready(function(){
+
+        $('#tabel-jenis-pemeriksaan tbody').on('click', 'tr', function() {
+                var data = table.row(this).data();
+                var rowIndex = table.row(this).index(); // Index baris dalam halaman saat ini
+                var pageInfo = table.page.info(); // Informasi tentang halaman saat ini
+                var rowGlobalIndex = rowIndex + pageInfo.start; // Index baris global dalam seluruh data
+                //alert(rowIndex);
+                // alert('Anda mengklik baris yang berisi: ' + data.join(', ') + '\nNomor urut baris di halaman ini: ' + rowIndex + '\nNomor urut baris global: ' + rowGlobalIndex);
+            });
        
-        var table = $('#tabel-jenis-pemeriksaan').DataTable();
+        var table = $('#tabel-jenis-pemeriksaan').DataTable({
+                "pageLength": 300
+            });
         var table1 = $('#tabel-slot-pemeriksaan').DataTable();
         $('.select-data').click(function(event) {
             event.preventDefault(); // Mencegah aksi default dari link

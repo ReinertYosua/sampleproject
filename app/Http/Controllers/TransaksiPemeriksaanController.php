@@ -119,7 +119,7 @@ class TransaksiPemeriksaanController extends Controller
                     DB::raw('COALESCE(status5.totalStatus5, NULL) AS totalStatus5'),
                     DB::raw('COALESCE(status6.totalStatus6, NULL) AS totalStatus6')
                 )
-                ->orderBy('transaksi_pemeriksaan.tanggalPemeriksaan', 'asc')
+                ->orderBy('transaksi_pemeriksaan.id', 'asc')
                 ->get();
                 // dd($datatransaksiperiksa);
             }else if(Auth::user()->role =='dokter'){
@@ -444,8 +444,15 @@ class TransaksiPemeriksaanController extends Controller
                 $keterangan = $request->input('keterangan', []);
                 for ($dp=0; $dp < count($namaJenisPemeriksaan); $dp++) {
 
-                    $user = DetailTransaksiPemeriksaan::where('uuid','=', $uuid[$dp])
+                    $detailUpdate = DetailTransaksiPemeriksaan::where('uuid','=', $uuid[$dp])
                     ->update([
+                        'jamMulaiAlat' => $jamMulaiAlat[$dp],
+                        'jamSelesaiAlat' => $jamSelesaiAlat[$dp],
+                        'ruangan' => $ruangan[$dp],
+                        // 'keteranganRadiografer' => $keterangan[$dp],
+                        'harga' => $harga[$dp],
+                        'diskon' => $diskon[$dp],
+                        'hargaTotal' => $hargaTotal[$dp],
                         'status' => $status[$dp],
                         'keteranganRadiografer' => $keterangan[$dp],
                     ]);
@@ -511,16 +518,9 @@ class TransaksiPemeriksaanController extends Controller
                 return redirect()->route('karyawan.transaksipemeriksaan.index')->with('success','Transaksi Pemeriksaan berhasil diubah.');
                 
             }else if($totalRuangTunggu>=1){
-                //kirim data dicom
-                // $this->sendDataAPI($request,$id);
+             
                 
-
-                //jika salah satu status menunjukkan menunggu hasil
-
-                // delete detail pendaftaran yang lama
-                // DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan', $id)->delete();
-                
-                $user = TransaksiPemeriksaan::where('id','=', $id)
+                $transaksiUpdate = TransaksiPemeriksaan::where('id','=', $id)
                     ->update([
                         'diagnosis' => $request->diagnosis,
                         'keteranganDokter' => $request->keteranganDokter,
@@ -538,8 +538,15 @@ class TransaksiPemeriksaanController extends Controller
                 $keterangan = $request->input('keterangan', []);
                 for ($dp=0; $dp < count($namaJenisPemeriksaan); $dp++) {
 
-                    $user = DetailTransaksiPemeriksaan::where('uuid','=', $uuid[$dp])
+                    $detailUpdate = DetailTransaksiPemeriksaan::where('uuid','=', $uuid[$dp])
                     ->update([
+                        'jamMulaiAlat' => $jamMulaiAlat[$dp],
+                        'jamSelesaiAlat' => $jamSelesaiAlat[$dp],
+                        'ruangan' => $ruangan[$dp],
+                        // 'keteranganRadiografer' => $keterangan[$dp],
+                        'harga' => $harga[$dp],
+                        'diskon' => $diskon[$dp],
+                        'hargaTotal' => $hargaTotal[$dp],
                         'status' => $status[$dp],
                         'keteranganRadiografer' => $keterangan[$dp],
                     ]);
@@ -559,12 +566,18 @@ class TransaksiPemeriksaanController extends Controller
                     // ]);
                 }
 
-                $this->sendDataAPI($id);
+                // Kirim data DICOM
+                  $this->sendDataAPI($id);
                 return redirect()->route('karyawan.transaksipemeriksaan.index')->with('success','Transaksi Pemeriksaan berhasil diubah.');
             }else{
                
                 
-                DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan', $id)->delete();
+                // DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan', $id)->delete();
+                $transaksiUpdate = TransaksiPemeriksaan::where('id','=', $id)
+                    ->update([
+                        'diagnosis' => $request->diagnosis,
+                        'keteranganDokter' => $request->keteranganDokter,
+                    ]);
 
                 $uuid = $request->input('uuid', []);
                 $namaJenisPemeriksaan = $request->input('namaJenisPemeriksaan', []);
@@ -578,19 +591,32 @@ class TransaksiPemeriksaanController extends Controller
                 $keterangan = $request->input('keterangan', []);
                 for ($dp=0; $dp < count($namaJenisPemeriksaan); $dp++) {
 
-                    $detailTransaksi=DetailTransaksiPemeriksaan::create([
-                        'uuid' => Str::uuid(),
-                        'idTransaksiPemeriksaan' => $id,
-                        'idJenisPemeriksaan' => Str::before($namaJenisPemeriksaan[$dp], '-'),//mengambil nilai paling depan dari 2-RRZZZ
+                    $detailUpdate = DetailTransaksiPemeriksaan::where('uuid','=', $uuid[$dp])
+                    ->update([
                         'jamMulaiAlat' => $jamMulaiAlat[$dp],
                         'jamSelesaiAlat' => $jamSelesaiAlat[$dp],
                         'ruangan' => $ruangan[$dp],
-                        'keteranganRadiografer' => $keterangan[$dp],
+                        // 'keteranganRadiografer' => $keterangan[$dp],
                         'harga' => $harga[$dp],
                         'diskon' => $diskon[$dp],
                         'hargaTotal' => $hargaTotal[$dp],
                         'status' => $status[$dp],
+                        'keteranganRadiografer' => $keterangan[$dp],
                     ]);
+
+                    // $detailTransaksi=DetailTransaksiPemeriksaan::create([
+                    //     'uuid' => Str::uuid(),
+                    //     'idTransaksiPemeriksaan' => $id,
+                    //     'idJenisPemeriksaan' => Str::before($namaJenisPemeriksaan[$dp], '-'),//mengambil nilai paling depan dari 2-RRZZZ
+                    //     'jamMulaiAlat' => $jamMulaiAlat[$dp],
+                    //     'jamSelesaiAlat' => $jamSelesaiAlat[$dp],
+                    //     'ruangan' => $ruangan[$dp],
+                    //     'keteranganRadiografer' => $keterangan[$dp],
+                    //     'harga' => $harga[$dp],
+                    //     'diskon' => $diskon[$dp],
+                    //     'hargaTotal' => $hargaTotal[$dp],
+                    //     'status' => $status[$dp],
+                    // ]);
                 }
                 return redirect()->route('karyawan.transaksipemeriksaan.index')->with('success','Transaksi Pemeriksaan berhasil diubah.');
             }
@@ -664,7 +690,7 @@ class TransaksiPemeriksaanController extends Controller
         ->join('dicom as c', 'c.alamatIP', '=', 'b.alamatIP')
         ->select('detail_transaksi_pemeriksaan.*', 'a.*', 'b.*', 'c.*')
         ->get();
-        // dd($getDetailTransaksiPemeriksaan);
+         //dd($getDetailTransaksiPemeriksaan);
 
         $data =[];
         foreach($getDetailTransaksiPemeriksaan as $detailpemeriksaan){
@@ -676,10 +702,12 @@ class TransaksiPemeriksaanController extends Controller
                 'PatientBirthDate' => $formatBirthDate,
                 'PatientSex' => $formatSex,
                 'PatientWeight' => "".$getDataUser[0]->beratBadan."",
-                'StudyID' => $id, /* idTransaksiPemeriksaan */
-                'AccessionNumber' => '*',
+                'StudyID' => "".$id."", /* idTransaksiPemeriksaan */
+                'AccessionNumber' => '^',
                 'ReferringPhysician' => str_replace(' ', '^', strtoupper($formatNamaDokterRekomendasi)),
                 'StudyDescription' => str_replace(' ', '^', strtoupper($getDataUser[0]->keteranganDokter)),
+                'StudyInstanceUID'=> "".$detailpemeriksaan->idJenisPemeriksaan."",
+                'ScheduledProcedureStepID'=> "".$detailpemeriksaan->idJenisPemeriksaan."",
                 'ScheduledProcedureStepStartDate' => $formatTanggalPeriksa,
                 'Modality' => str_replace(' ', '^', strtoupper($detailpemeriksaan->kelompokJenisPemeriksaan)),
                 'RequestedProcedureID' => $detailpemeriksaan->uuid, /* idJenisPemeriksaan */
@@ -692,8 +720,7 @@ class TransaksiPemeriksaanController extends Controller
                 'SpecialNeeds' => '*',
             ];
         }
-        dd($data);
-        
+       
 
 
         // $data =[];
@@ -727,7 +754,7 @@ class TransaksiPemeriksaanController extends Controller
         //     ];
             
         // }
-        // dd($data);
+         //dd($data);
          // URL endpoint DICOM server (dummy untuk testing)
          $urlDicomServer = 'http://192.168.1.217:8080'; // Ganti dengan URL endpoint DICOM yang sebenarnya
 

@@ -64,7 +64,7 @@ class PendaftaranPemeriksaanController extends Controller
         //
         $datajenispemeriksaan = JenisPemeriksaan::join('modalitas', 'modalitas.id','=','jenis_pemeriksaan.idModalitas')
                                 ->select(['modalitas.namaModalitas as namaModalitas', 'modalitas.kodeRuang as kodeRuang', 'jenis_pemeriksaan.*'])
-                                ->paginate(10);
+                                ->get();
         //dd($datajenispemeriksaan);
         $no = 'REG-' . date('Ymd') . '-' . Str::upper(Str::random(6));
         // dd($no);

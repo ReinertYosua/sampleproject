@@ -79,6 +79,7 @@ class HasilPemeriksaanController extends Controller
                 'hasil_pemeriksaan.no_transaksi_pemeriksaan',
                 'b.tanggalPemeriksaan',
                 'g.namaDokterPengirim as namaDokterRekomendasi',
+                'd.name as namaDokterRadiology',
                 'f.name as namaPasien',
                 'd.name as namaDokter',
                 DB::raw('COALESCE(h.laporan, 0) as TotalLaporanBelumAda'),
@@ -145,6 +146,7 @@ class HasilPemeriksaanController extends Controller
                 'hasil_pemeriksaan.no_transaksi_pemeriksaan',
                 'b.tanggalPemeriksaan',
                 'g.namaDokterPengirim as namaDokterRekomendasi',
+                'd.name as namaDokterRadiology',
                 'f.name as namaPasien',
                 'd.name as namaDokter',
                 DB::raw('COALESCE(h.laporan, 0) as TotalLaporanBelumAda'),
@@ -211,6 +213,7 @@ class HasilPemeriksaanController extends Controller
                 'hasil_pemeriksaan.no_transaksi_pemeriksaan',
                 'b.tanggalPemeriksaan',
                 'g.namaDokterPengirim as namaDokterRekomendasi',
+                'd.name as namaDokterRadiology',
                 'f.name as namaPasien',
                 'd.name as namaDokter',
                 DB::raw('COALESCE(h.laporan, 0) as TotalLaporanBelumAda'),
@@ -383,7 +386,7 @@ class HasilPemeriksaanController extends Controller
             ->join('detail_hasil_pemeriksaan', 'hasil_pemeriksaan.id', '=', 'detail_hasil_pemeriksaan.idHasilPemeriksaan')
             ->join('jenis_pemeriksaan', 'jenis_pemeriksaan.id', '=', 'detail_hasil_pemeriksaan.idJenisPemeriksaan')
             ->select(
-                
+                'hasil_pemeriksaan.id as idHasilPemeriksaan',
                 'jenis_pemeriksaan.id as idJenisPemeriksaan',
                 'jenis_pemeriksaan.namaJenisPemeriksaan',
                 'jenis_pemeriksaan.kelompokJenisPemeriksaan',
@@ -397,7 +400,7 @@ class HasilPemeriksaanController extends Controller
 
             DetailTransaksiPemeriksaan::where('idTransaksiPemeriksaan', $getHasilPemeriksaan[0]->idTransaksiPemeriksaan)
             ->update(['status' => '6']);
-        //dd($getDetailHasil);
+        // dd($getDetailHasil);
         return view('dokter.hasilpemeriksaan.preview', compact('getHasilPemeriksaan','getDetailHasil'));
     }
     

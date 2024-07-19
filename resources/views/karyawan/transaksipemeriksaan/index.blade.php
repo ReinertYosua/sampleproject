@@ -47,10 +47,12 @@
                         </div>
                     </div>
                     
+                    
                     <table id="tabel-transaksi-pemeriksaan" class="table table-bordered mt-1 text-center" width="100%">
                         <thead>
                             <tr>
-                                <td>No Transaksi Pendaftaran</td>
+                                <td>No Antrian</td>
+                                <td>No Transaksi Pemeriksaan</td>
                                 <td>No Registrasi Pendaftaran</td>
                                 <td>Nama Pasien</td>
                                 <td>Nama Dokter Radiologi</td>
@@ -61,7 +63,7 @@
                         <tbody>
                             @foreach($datatransaksiperiksa as $dtp)
                                 @php
-                               
+                            
                                 $totalStatus = [
                                                     $dtp->totalStatus1,
                                                     $dtp->totalStatus2,
@@ -70,10 +72,12 @@
                                                     $dtp->totalStatus5,
                                                     $dtp->totalStatus6
                                                 ];
-                               
+                                
                                 $nilaiTerkecil = min(array_filter($totalStatus, function($x) { return is_numeric($x) && $x != null; })); 
+                                
                                 $indeksTerkecil = array_search($nilaiTerkecil, $totalStatus);
                                 
+
                                     if($indeksTerkecil==0){
                                         $trclass="table-warning";
                                     }else if($indeksTerkecil==1){
@@ -89,12 +93,14 @@
                                     }
                                 @endphp
                                 <tr class="{{ $trclass }}">
+                                    <td>{{ $dtp->id }}</td>
                                     <td>{{ $dtp->no_transaksi_pemeriksaan }}</td>
                                     <td>{{ $dtp->no_pendaftaran }}</td>
                                     <td>{{ $dtp->nama_pasien }}</td>
                                     <td>Dr. {{ $dtp->nama_dokter }}</td>
                                     <td>{{ $dtp->tanggalPemeriksaan }}</td>
                                     <td>
+                                        
                                         @if(Auth::user()->role == 'karyawan')
                                             @if($indeksTerkecil==0)
                                                 <span class="badge bg-warning"><i class="bi bi-people"></i> In Queue</span>
@@ -125,9 +131,9 @@
                                             @elseif($indeksTerkecil==5)
                                                     <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Finished</span>
                                             @endif
-                                           
+                                        
                                         @endif
-                                       
+                                    
                                         @if(Auth::user()->role == 'dokter')
                                             @if($indeksTerkecil==0)
                                                 <span class="badge bg-warning"><i class="bi bi-people"></i> In Queue</span>
@@ -180,7 +186,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                   
 
                     <!-- vertically modal -->
                     <div class="modal fade" id="detailModal" tabindex="-1">
@@ -265,10 +270,10 @@
         // $('#tabel-daftar-pemeriksaan').DataTable();
 
         new DataTable('#tabel-transaksi-pemeriksaan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc'],[0, 'asc']]
         });
 
-        $('.detailBtn').click(function(e) {
+        $(document).on('click', '.detailBtn', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 console.log(id);
@@ -295,7 +300,7 @@
                     }
                     
                 });
-            });
+        });
     });
 </script>
 @endif
@@ -305,10 +310,10 @@
     $(document).ready(function(){
         // $('#tabel-transaksi-pemeriksaan').DataTable();
         new DataTable('#tabel-transaksi-pemeriksaan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc'],[0, 'asc']]
         });
 
-        $('.detailBtn').click(function(e) {
+        $(document).on('click', '.detailBtn', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 console.log(id);
@@ -344,10 +349,10 @@
     $(document).ready(function(){
         // $('#tabel-transaksi-pemeriksaan').DataTable();
         new DataTable('#tabel-transaksi-pemeriksaan', {
-            order: [[5, 'asc']]
+            order: [[6, 'asc'],[0, 'asc']]
         });
 
-        $('.detailBtn').click(function(e) {
+        $(document).on('click', '.detailBtn', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 console.log(id);

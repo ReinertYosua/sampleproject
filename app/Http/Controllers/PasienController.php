@@ -49,8 +49,8 @@ class PasienController extends Controller
             'golDarah' => 'required|string',
             'tinggiBadan'=> 'required|numeric',
             'beratBadan' => 'required|numeric',
-            'fotoprofil' => 'required|image',
-            'fotoprofil.*' => 'mimes:jpg,jpeg,png|max:2048',
+            // 'fotoprofil' => 'required|image',
+            // 'fotoprofil.*' => 'mimes:jpg,jpeg,png|max:2048',
            
 		];
         $id=
@@ -89,8 +89,13 @@ class PasienController extends Controller
             // dd($request);
             //upload image
             $imageProfil = $request->file('fotoprofil');
-            $imageNameProfil = time().".".$imageProfil->getClientOriginalExtension();
-            $pathFotoProfil = Storage::disk('public')->putFileAs('fotoprofil/pasien', $imageProfil,$imageNameProfil);
+            if($imageProfil!=""){
+                $imageNameProfil = time().".".$imageProfil->getClientOriginalExtension();
+                $pathFotoProfil = Storage::disk('public')->putFileAs('fotoprofil/pasien', $imageProfil,$imageNameProfil);
+            }else{
+                $imageNameProfil="no pict";
+            }
+            
 
             $user=PasienModel::create([
                 'idUser' => Auth::user()->id,
