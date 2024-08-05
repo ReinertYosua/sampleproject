@@ -567,7 +567,7 @@ class TransaksiPemeriksaanController extends Controller
                 }
 
                 // Kirim data DICOM
-                  $this->sendDataAPI($id);
+                  //$this->sendDataAPI($id);
                 return redirect()->route('karyawan.transaksipemeriksaan.index')->with('success','Transaksi Pemeriksaan berhasil diubah.');
             }else{
                
